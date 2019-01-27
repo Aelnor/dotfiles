@@ -69,7 +69,6 @@ filetype plugin indent on
 set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
-Plugin 'altercation/vim-colors-solarized'
 Plugin 'morhetz/gruvbox'
 Plugin 'majutsushi/tagbar'            " Class/module browser
 Plugin 'tpope/vim-surround'     " Parentheses, brackets, quotes, XML tags, and more
@@ -80,6 +79,10 @@ Plugin 'scrooloose/nerdtree' 	    	" Project and file navigation
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'rking/ag.vim'
+
+" color schemes
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'dracula/vim'
 
 Plugin 'junegunn/vim-easy-align'
 
@@ -101,8 +104,7 @@ call vundle#end()               " required
 
 " Some settings to enable the theme:
 syntax enable     " Use syntax highlighting
-set background=dark
-colorscheme solarized
+color dracula
 
 let g:tagbar_autofocus = 1
 
