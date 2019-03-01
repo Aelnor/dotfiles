@@ -40,7 +40,7 @@ function! SwitchSourceHeader()
 endfunction
 
 nmap <F4> :call SwitchSourceHeader()<CR><Paste>
-nmap <F8> :Ag <cword><CR>
+nmap <F8> :Ack <cword><CR>
 
 au FileType go nmap <F5> <Plug>(go-run)
 au FileType go nmap <F7> <Plug>(go-build)
@@ -56,7 +56,7 @@ au FileType js setl tabstop=4 shiftwidth=4 expandtab autoindent
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 
 """ SYSTEM CLIPBOARD COPY & PASTE SUPPORT
-set pastetoggle=<F2> "F2 before pasting to preserve indentation
+"set pastetoggle=<F2> "F2 before pasting to preserve indentation
 "Copy paste to/from clipboard
 vnoremap <C-c> "*y
 filetype off                  " required
@@ -78,7 +78,7 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'scrooloose/nerdtree' 	    	" Project and file navigation
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'rking/ag.vim'
+Plugin 'mileszs/ack.vim'
 
 " color schemes
 Plugin 'altercation/vim-colors-solarized'
@@ -107,11 +107,12 @@ syntax enable     " Use syntax highlighting
 color dracula
 
 let g:tagbar_autofocus = 1
+let g:ackprg = 'ag --vimgrep --ignore tags'
 
-let g:airline_powerline_fonts = 1
+"let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_theme='badwolf'
+"let g:airline_theme='badwolf'
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
@@ -162,3 +163,6 @@ set imsearch=0
 au FileType go nmap <F4> :GoAlternate<CR>
 au FileType go nnoremap <Leader>t :GoTest<CR>
 au FileType go nnoremap <Leader>c :GoCoverageToggle<CR>
+
+" Fugitigve stuff
+nnoremap <C-S> :Gtabedit :<CR>:set previewwindow<CR>
