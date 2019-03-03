@@ -53,8 +53,6 @@ au FileType go set autoindent
 au FileType c setl tabstop=8 shiftwidth=8 noexpandtab autoindent
 au FileType js setl tabstop=4 shiftwidth=4 expandtab autoindent
 
-let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
-
 """ SYSTEM CLIPBOARD COPY & PASTE SUPPORT
 "set pastetoggle=<F2> "F2 before pasting to preserve indentation
 "Copy paste to/from clipboard
@@ -99,7 +97,6 @@ Plugin 'python-mode/python-mode'
 Plugin 'posva/vim-vue'
 " C++
 Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'Valloric/YouCompleteMe'
 call vundle#end()               " required
 
 " Some settings to enable the theme:
