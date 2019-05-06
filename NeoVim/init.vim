@@ -93,7 +93,17 @@ Plugin 'python-mode/python-mode'
 Plugin 'posva/vim-vue'
 " C++
 Plugin 'octol/vim-cpp-enhanced-highlight'
+" -- Markdown -- 
+" tabular plugin is used to format tables
+Plugin 'godlygeek/tabular'
+" JSON front matter highlight plugin
+Plugin 'elzr/vim-json'
+Plugin 'plasticboy/vim-markdown'
 call vundle#end()               " required
+
+call plug#begin('~/.local/share/nvim/site/autoload')
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
+call plug#end()
 
 " Some settings to enable the theme:
 syntax enable     " Use syntax highlighting
@@ -152,3 +162,25 @@ au FileType go nnoremap <Leader>c :GoCoverageToggle<CR>
 
 " Fugitigve stuff
 nnoremap <C-S> :Gtabedit :<CR>:set previewwindow<CR>
+
+" Markdown
+" disable header folding
+let g:vim_markdown_folding_disabled = 1
+
+" do not use conceal feature, the implementation is not so good
+let g:vim_markdown_conceal = 0
+
+" disable math tex conceal feature
+let g:tex_conceal = ""
+let g:vim_markdown_math = 1
+
+" support front matter of various format
+let g:vim_markdown_frontmatter = 1  " for YAML format
+let g:vim_markdown_toml_frontmatter = 1  " for TOML format
+let g:vim_markdown_json_frontmatter = 1  " for JSON format
+augroup pandoc_syntax
+    au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
+augroup END
+
+" do not close the preview tab when switching to other buffers
+let g:mkdp_auto_close = 0
