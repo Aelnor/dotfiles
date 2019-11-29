@@ -102,10 +102,6 @@ Plugin 'elzr/vim-json'
 Plugin 'plasticboy/vim-markdown'
 
 Plugin 'OmniSharp/omnisharp-vim'
-"Plugin 'prabirshrestha/asyncomplete.vim'
-"Plugin 'prabirshrestha/async.vim'
-"Plugin 'prabirshrestha/vim-lsp'
-"Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 call vundle#end()               " required
 
 call plug#begin('~/.local/share/nvim/site/autoload')
