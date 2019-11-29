@@ -35,8 +35,8 @@ function! SwitchSourceHeader()
   endif
 endfunction
 
-nmap <F4> :call SwitchSourceHeader()<CR><Paste>
-nmap <F8> :Ack <cword><CR>
+nmap <F4> :call SwitchSourceHeader()<CR>
+nmap <F8> :Rg <C-r><C-w><CR>
 
 
 au FileType go nmap <F5> <Plug>(go-run)
@@ -73,10 +73,11 @@ Plugin 'scrooloose/nerdtree' 	    	" Project and file navigation
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 
-Plugin 'mileszs/ack.vim'
 Plugin 'junegunn/vim-easy-align'
-Plugin 'junegunn/fzf'
 
+Plugin 'sakhnik/nvim-gdb'
+
+Plugin 'Asheq/close-buffers.vim'
 " color schemes
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'dracula/vim'
@@ -93,7 +94,27 @@ Plugin 'python-mode/python-mode'
 Plugin 'posva/vim-vue'
 " C++
 Plugin 'octol/vim-cpp-enhanced-highlight'
+" -- Markdown -- 
+" tabular plugin is used to format tables
+Plugin 'godlygeek/tabular'
+" JSON front matter highlight plugin
+Plugin 'elzr/vim-json'
+Plugin 'plasticboy/vim-markdown'
+
+Plugin 'OmniSharp/omnisharp-vim'
+"Plugin 'prabirshrestha/asyncomplete.vim'
+"Plugin 'prabirshrestha/async.vim'
+"Plugin 'prabirshrestha/vim-lsp'
+"Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 call vundle#end()               " required
+
+call plug#begin('~/.local/share/nvim/site/autoload')
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'rust-lang/rust.vim'
+call plug#end()
 
 " Some settings to enable the theme:
 syntax enable     " Use syntax highlighting
@@ -140,6 +161,9 @@ let g:pymode_options_max_line_length = 120
 let g:pymode_lint_options_pep8 = {'max_line_length': g:pymode_options_max_line_length}
 let g:pymode_options_colorcolumn = 1
 let g:pymode_folding = 0
+let g:pymode_rope = 1
+
+let g:rustfmt_autosave = 1
 
 nnoremap <Leader>o :FZF<CR>
 nmap ga <Plug>(EasyAlign)
@@ -152,3 +176,33 @@ au FileType go nnoremap <Leader>c :GoCoverageToggle<CR>
 
 " Fugitigve stuff
 nnoremap <C-S> :Gtabedit :<CR>:set previewwindow<CR>
+
+let g:OmniSharp_server_stdio = 1
+let g:OmniSharp_prefer_global_sln = 1 
+let g:OmniSharp_server_type = 'roslyn' 
+
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
+
+" Markdown
+" disable header folding
+let g:vim_markdown_folding_disabled = 1
+
+" do not use conceal feature, the implementation is not so good
+let g:vim_markdown_conceal = 0
+
+" disable math tex conceal feature
+let g:tex_conceal = ""
+let g:vim_markdown_math = 1
+
+" support front matter of various format
+let g:vim_markdown_frontmatter = 1  " for YAML format
+let g:vim_markdown_toml_frontmatter = 1  " for TOML format
+let g:vim_markdown_json_frontmatter = 1  " for JSON format
+augroup pandoc_syntax
+    au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
+augroup END
+
+" do not close the preview tab when switching to other buffers
+let g:mkdp_auto_close = 0
