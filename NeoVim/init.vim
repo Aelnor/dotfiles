@@ -2,6 +2,8 @@ set nocompatible              " be iMproved, required
 set number
 set numberwidth=5
 
+set shell=/bin/zsh
+
 
 set showcmd
 set autoread
