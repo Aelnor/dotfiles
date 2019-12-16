@@ -62,60 +62,47 @@ inoremap jj <ESC>
 
 filetype plugin indent on
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim/
-call vundle#begin()
-Plugin 'gmarik/Vundle.vim'
-Plugin 'majutsushi/tagbar'            " Class/module browser
-Plugin 'tpope/vim-surround'     " Parentheses, brackets, quotes, XML tags, and more
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'scrooloose/nerdtree' 	    	" Project and file navigation
-
-"Plugin 'vim-airline/vim-airline'
-"Plugin 'vim-airline/vim-airline-themes'
-
-Plugin 'junegunn/vim-easy-align'
-
-Plugin 'sakhnik/nvim-gdb'
-
-Plugin 'Asheq/close-buffers.vim'
-" color schemes
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'dracula/vim'
-Plugin 'morhetz/gruvbox'
-
-" --- Go ---
-Plugin 'fatih/vim-go'
-Plugin 'sebdah/vim-delve'
-" -- Python ---
-Bundle "lepture/vim-jinja"
-Plugin 'Vimjas/vim-python-pep8-indent'
-Plugin 'python-mode/python-mode'
-" Vue
-Plugin 'posva/vim-vue'
-" C++
-Plugin 'octol/vim-cpp-enhanced-highlight'
-" -- Markdown -- 
-" tabular plugin is used to format tables
-Plugin 'godlygeek/tabular'
-" JSON front matter highlight plugin
-Plugin 'elzr/vim-json'
-Plugin 'plasticboy/vim-markdown'
-
-Plugin 'OmniSharp/omnisharp-vim'
-call vundle#end()               " required
-
 call plug#begin('~/.local/share/nvim/site/autoload')
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'rust-lang/rust.vim'
+Plug 'majutsushi/tagbar'            " Class/module browser
+Plug 'tpope/vim-surround'     " Parentheses, brackets, quotes, XML tags, and more
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-unimpaired'
+Plug 'scrooloose/nerdtree' 	    	" Project and file navigation
 
-Plug 'itchyny/lightline.vim'
-Plug 'machakann/vim-highlightedyank'
-Plug 'andymass/vim-matchup'
+"Plug 'vim-airline/vim-airline'
+"Plug 'vim-airline/vim-airline-themes'
+
+Plug 'junegunn/vim-easy-align'
+
+Plug 'Asheq/close-buffers.vim'
+" color schemes
+Plug 'altercation/vim-colors-solarized'
+Plug 'dracula/vim'
+Plug 'morhetz/gruvbox'
+
+" --- Go ---
+Plug 'fatih/vim-go'
+Plug 'sebdah/vim-delve'
+" -- Python ---
+Plug 'Vimjas/vim-python-pep8-indent'
+Plug 'python-mode/python-mode'
+" Vue
+Plug 'posva/vim-vue'
+" C++
+Plug 'octol/vim-cpp-enhanced-highlight'
+" -- Markdown -- 
+" tabular plugin is used to format tables
+Plug 'godlygeek/tabular'
+" JSON front matter highlight plugin
+Plug 'elzr/vim-json'
+Plug 'plasticboy/vim-markdown'
+
+Plug 'OmniSharp/omnisharp-vim'
 call plug#end()
 
 " Some settings to enable the theme:
