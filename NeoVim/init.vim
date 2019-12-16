@@ -72,8 +72,8 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'scrooloose/nerdtree' 	    	" Project and file navigation
 
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
+"Plugin 'vim-airline/vim-airline'
+"Plugin 'vim-airline/vim-airline-themes'
 
 Plugin 'junegunn/vim-easy-align'
 
@@ -112,6 +112,10 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'rust-lang/rust.vim'
+
+Plug 'itchyny/lightline.vim'
+Plug 'machakann/vim-highlightedyank'
+Plug 'andymass/vim-matchup'
 call plug#end()
 
 " Some settings to enable the theme:
@@ -121,6 +125,18 @@ set background=dark
 let g:gruvbox_invert_selection=0
 let g:gruvbox_italic=1
 colorscheme gruvbox
+
+" Lightline
+" let g:lightline = { 'colorscheme': 'wombat' }
+let g:lightline = {
+      \ 'component_function': {
+      \   'filename': 'LightlineFilename',
+      \ },
+\ }
+function! LightlineFilename()
+  return expand('%:t') !=# '' ? @% : '[No Name]'
+endfunction
+
 
 let g:tagbar_autofocus = 1
 let g:ackprg = 'ag --vimgrep --ignore tags'
@@ -164,6 +180,7 @@ let g:pymode_rope = 1
 let g:rustfmt_autosave = 1
 
 nnoremap <Leader>o :FZF<CR>
+nnoremap <Leader>b :Buffers<CR>
 nmap ga <Plug>(EasyAlign)
 xmap ga <Plug>(EasyAlign)
 
