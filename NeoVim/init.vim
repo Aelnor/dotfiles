@@ -85,6 +85,7 @@ Plug 'Asheq/close-buffers.vim'
 Plug 'altercation/vim-colors-solarized'
 Plug 'dracula/vim'
 Plug 'morhetz/gruvbox'
+Plug 'chriskempson/base16-vim'
 
 " --- Go ---
 Plug 'fatih/vim-go'
@@ -112,7 +113,9 @@ set termguicolors     " enable true colors support
 set background=dark
 let g:gruvbox_invert_selection=0
 let g:gruvbox_italic=1
-colorscheme gruvbox
+"colorscheme gruvbox
+colorscheme base16-gruvbox-dark-hard
+let base16colorspace=256  " Access colors present in 256 colorspace
 
 let g:tagbar_autofocus = 1
 let g:ackprg = 'ag --vimgrep --ignore tags'
