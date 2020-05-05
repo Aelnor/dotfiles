@@ -1,0 +1,40 @@
+# set scroll history to 100,000 lines
+set-option -g history-limit 100000
+
+# modern colors
+set -ga terminal-overrides ",alacritty:Tc"
+set -g default-terminal "screen-256color"
+
+# Avoid ESC delay
+set -s escape-time 0
+
+# Fix titlebar
+set -g set-titles on
+set -g set-titles-string "#T"
+
+# VIM mode
+set -g mode-keys vi
+set -g status-keys vi
+bind -T copy-mode-vi v send-keys -X begin-selection
+bind -T copy-mode-vi y send -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
+unbind -T copy-mode-vi Enter
+bind -T copy-mode-vi Enter send -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
+
+# Mouse friendly
+set -g mouse on
+
+# Move between panes with vi keys
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+######################
+### DESIGN CHANGES ###
+######################
+
+# Avoid date/time taking up space
+set -g status-right ''
+set -g status-right-length 0
+
+source-file ~/Documents/dotfiles/tmux/base16-gruvbox-dark-hard.conf
