@@ -87,6 +87,11 @@ Plug 'morhetz/gruvbox'
 Plug 'chriskempson/base16-vim'
 Plug 'arcticicestudio/nord-vim'
 
+" GUI enhancements
+Plug 'itchyny/lightline.vim'
+Plug 'machakann/vim-highlightedyank'
+Plug 'andymass/vim-matchup'
+
 " --- Go ---
 Plug 'fatih/vim-go'
 Plug 'sebdah/vim-delve'
@@ -117,27 +122,24 @@ colorscheme base16-gruvbox-dark-hard
 let base16colorspace=256  " Access colors present in 256 colorspace
 
 " Lightline
-" let g:lightline = { 'colorscheme': 'wombat' }
 let g:lightline = {
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
+      \ },
       \ 'component_function': {
       \   'filename': 'LightlineFilename',
+      \   'cocstatus': 'coc#status'
       \ },
-\ }
+      \ }
 function! LightlineFilename()
   return expand('%:t') !=# '' ? @% : '[No Name]'
 endfunction
 
+" Use auocmd to force lightline update.
+autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
 let g:tagbar_autofocus = 1
-let g:ackprg = 'ag --vimgrep --ignore tags'
-
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-let g:airline_symbols.space = "\ua0"
-
 let mapleader="\<SPACE>"
 "
 " C-Space autocomplete
@@ -169,7 +171,7 @@ let g:pymode_rope = 1
 
 let g:rustfmt_autosave = 1
 
-nnoremap <Leader>o :FZF<CR>
+nnoremap <Leader>o :Files<CR>
 nnoremap <Leader>b :Buffers<CR>
 nmap ga <Plug>(EasyAlign)
 xmap ga <Plug>(EasyAlign)
@@ -186,9 +188,32 @@ let g:OmniSharp_server_stdio = 1
 let g:OmniSharp_prefer_global_sln = 1 
 let g:OmniSharp_server_type = 'roslyn' 
 
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 'Smart' nevigation
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-.> to trigger completion.
+inoremap <silent><expr> <c-.> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+
 
 " Markdown
 " disable header folding
