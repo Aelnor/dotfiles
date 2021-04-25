@@ -50,9 +50,12 @@ set shiftwidth=2
 set expandtab
 set autoindent
 
-au FileType go setl tabstop=8 shiftwidth=8 noexpandtab autoindent
+au FileType go setl tabstop=4 shiftwidth=4 noexpandtab autoindent
 au FileType c setl tabstop=8 shiftwidth=8 noexpandtab autoindent
 au FileType js setl tabstop=4 shiftwidth=4 expandtab autoindent
+
+au FileType markdown.pandoc setl wrap
+au FileType markdown.pandoc setl spell spelllang=en_US
 
 "Copy paste to/from clipboard
 vnoremap <C-c> "*y
@@ -95,21 +98,26 @@ Plug 'andymass/vim-matchup'
 " --- Go ---
 Plug 'fatih/vim-go'
 Plug 'sebdah/vim-delve'
+"
 " -- Python ---
 Plug 'Vimjas/vim-python-pep8-indent'
-Plug 'python-mode/python-mode'
+" Plug 'python-mode/python-mode'
+"
 " Vue
 Plug 'posva/vim-vue'
+
 " C++
 Plug 'octol/vim-cpp-enhanced-highlight'
+
 " -- Markdown -- 
 " tabular plugin is used to format tables
 Plug 'godlygeek/tabular'
+
 " JSON front matter highlight plugin
 Plug 'elzr/vim-json'
 Plug 'plasticboy/vim-markdown'
 
-Plug 'OmniSharp/omnisharp-vim'
+" Plug 'OmniSharp/omnisharp-vim'
 call plug#end()
 
 " Some settings to enable the theme:
@@ -236,3 +244,20 @@ augroup END
 
 " do not close the preview tab when switching to other buffers
 let g:mkdp_auto_close = 0
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
