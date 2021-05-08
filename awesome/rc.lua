@@ -21,6 +21,7 @@ local xrandr = require("xrandr")
 
 local dpi = require("beautiful.xresources").apply_dpi
 awful.screen.set_auto_dpi_enabled( true )
+require("volume")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -215,6 +216,7 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             mykeyboardlayout,
+            volume_widget,
             wibox.widget.systray(),
             mytextclock,
             s.mylayoutbox,
@@ -321,22 +323,31 @@ globalkeys = gears.table.join(
     awful.key({ "Control" }, "space", function () awful.util.spawn("rofi -modi combi -combi-modi window,run,drun,ssh -show combi -opacity 70") end,
               {description = "run prompt", group = "launcher"}),
 
-    awful.key({ modkey }, "x",
-              function ()
-                  awful.prompt.run {
-                    prompt       = "Run Lua code: ",
-                    textbox      = awful.screen.focused().mypromptbox.widget,
-                    exe_callback = awful.util.eval,
-                    history_path = awful.util.get_cache_dir() .. "/history_eval"
-                  }
-              end,
-              {description = "lua execute prompt", group = "awesome"}),
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"}),
     -- Xrandr
     awful.key({ modkey, "Control" }, "x", function() xrandr.xrandr() end, 
-              {description = "xrandr menu", group = "layout"})
+              {description = "xrandr menu", group = "layout"}),
+
+    -- Volume control
+   awful.key({ }, "XF86AudioRaiseVolume", function ()
+       awful.util.spawn("amixer set Master 9%+", false) end,
+       {description = "volume up", group = "multimedia"}),
+   awful.key({ }, "XF86AudioLowerVolume", function ()
+       awful.util.spawn("amixer set Master 9%-", false) end,
+       {description = "volume down", group = "multimedia"}),
+   awful.key({ }, "XF86AudioMute", function ()
+       awful.util.spawn("amixer sset Master toggle", false) end,
+       {description = "mute", group = "multimedia"}),
+    -- print screen
+   awful.key({}, "Print",
+   function ()
+     -- bash syntax
+     -- awful.util.spawn_with_shell("FILE=" .. os.getenv("HOME") .. "/Screenshots/screenshot-$(date +%Y-%m-%dT%H-%M-%S).png && maim -s --hidecursor $FILE && xclip -selection clipboard $FILE -t image/png")
+     -- fish syntax
+     awful.util.spawn_with_shell("set FILE " .. os.getenv("HOME") .. "/Screenshots/screenshot-(date +%Y-%m-%dT%H-%M-%S).png && maim -s --hidecursor $FILE && xclip -selection clipboard $FILE -t image/png")
+   end)
 )
 
 clientkeys = gears.table.join(
