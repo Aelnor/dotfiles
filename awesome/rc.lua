@@ -586,7 +586,8 @@ autorunApps =
    "compton",
    "nitrogen --restore",
    "redshift-gtk",
-   "xss-lock slock"
+   "xss-lock slock",
+   "nm-applet"
 }
 if autorun then
    for app = 1, #autorunApps do
