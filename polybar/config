@@ -7,13 +7,16 @@ primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
 
+override-redirect = true
+wm-restack = i3
+
 [bar/main]
-monitor = ${env:MONITOR:eDP-1}
+monitor = ${env:MONITOR:DP-1}
 width = 100%
 height = 2.5%
 radius = 6.0
 fixed-center = false
-bottom = true
+#bottom = true
 
 background = ${colors.background}
 foreground = ${colors.foreground}
@@ -28,9 +31,9 @@ font-1 = "Noto Sans Mono:size=10;1"
 font-2 = "Noto Sans Symbols:size=10;1"
 font-3 = "Noto Sans Symbols2:size=10;1"
 
-modules-left = date i3 xwindow
-modules-center =
-modules-right = wlan xkeyboard memory cpu 
+modules-left = i3
+modules-center = xwindow
+modules-right = wlan battery memory cpu xkeyboard date
 
 tray-position = right
 tray-padding = 2
@@ -141,3 +144,25 @@ screenchange-reload = true
 type=internal/xkeyboard
 blacklist-0 = num lock
 blacklist-1 = scroll lock
+
+[module/battery]
+type = internal/battery
+
+; This is useful in case the battery never reports 100% charge
+full-at = 99
+
+; Use the following command to list batteries and adapters:
+; $ ls -1 /sys/class/power_supply/
+battery = BAT0
+adapter = AC
+
+; If an inotify event haven't been reported in this many
+; seconds, manually poll for new values.
+;
+; Needed as a fallback for systems that don't report events
+; on sysfs/procfs.
+;
+; Disable polling by setting the interval to 0.
+;
+; Default: 5
+poll-interval = 5

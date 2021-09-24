@@ -95,6 +95,11 @@ Plug 'itchyny/lightline.vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'andymass/vim-matchup'
 
+" Syntactic language support
+Plug 'cespare/vim-toml'
+Plug 'stephpy/vim-yaml'
+Plug 'rust-lang/rust.vim'
+
 " --- Go ---
 Plug 'fatih/vim-go'
 Plug 'sebdah/vim-delve'
@@ -120,17 +125,24 @@ Plug 'plasticboy/vim-markdown'
 " Plug 'OmniSharp/omnisharp-vim'
 call plug#end()
 
+packadd! dracula_pro
+
 " Some settings to enable the theme:
 syntax enable     " Use syntax highlighting
 set termguicolors     " enable true colors support
 set background=dark
 "let g:gruvbox_invert_selection=0
 "let g:gruvbox_italic=1
-colorscheme base16-gruvbox-dark-hard
+"colorscheme base16-gruvbox-dark-hard
 let base16colorspace=256  " Access colors present in 256 colorspace
+
+let g:dracula_colorterm = 0
+
+colorscheme dracula_pro
 
 " Lightline
 let g:lightline = {
+      \ 'colorscheme': 'darcula',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
@@ -250,6 +262,11 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
