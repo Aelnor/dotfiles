@@ -227,9 +227,7 @@ end)
 
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
-    awful.button({ }, 3, function () mymainmenu:toggle() end),
-    awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev)
+    awful.button({ }, 3, function () mymainmenu:toggle() end)
 ))
 -- }}}
 
@@ -519,7 +517,10 @@ awful.rules.rules = {
     --   properties = { screen = 1, tag = "2" } },
     { rule = { class = "mtga.exe" }, 
          properties = { screen = 1, tag = "4", floating = true } },
-
+    { rule = { name = "Zoom Meeting" },
+         properties = { tag = "5"} },
+    { rule = { class = "zoom" }, 
+         properties = { screen = 1, tag = "1", floating = true } },
 }
 -- }}}
 
