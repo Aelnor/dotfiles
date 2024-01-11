@@ -4,7 +4,6 @@ set numberwidth=5
 
 set shell=/bin/zsh
 
-
 set showcmd
 set autoread
 
@@ -89,6 +88,7 @@ Plug 'dracula/vim'
 Plug 'morhetz/gruvbox'
 Plug 'chriskempson/base16-vim'
 Plug 'arcticicestudio/nord-vim'
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
 " GUI enhancements
 Plug 'itchyny/lightline.vim'
@@ -101,8 +101,8 @@ Plug 'stephpy/vim-yaml'
 Plug 'rust-lang/rust.vim'
 
 " --- Go ---
-Plug 'fatih/vim-go'
-Plug 'sebdah/vim-delve'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "
 " -- Python ---
 Plug 'Vimjas/vim-python-pep8-indent'
@@ -121,8 +121,6 @@ Plug 'godlygeek/tabular'
 " JSON front matter highlight plugin
 Plug 'elzr/vim-json'
 Plug 'plasticboy/vim-markdown'
-
-" Plug 'OmniSharp/omnisharp-vim'
 call plug#end()
 
 packadd! dracula_pro
@@ -138,11 +136,12 @@ let base16colorspace=256  " Access colors present in 256 colorspace
 
 let g:dracula_colorterm = 0
 
-colorscheme dracula_pro
+" colorscheme dracula_pro
+colorscheme catppuccin
 
 " Lightline
 let g:lightline = {
-      \ 'colorscheme': 'darcula',
+      \ 'colorscheme': 'catppuccin',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
@@ -164,6 +163,12 @@ let mapleader="\<SPACE>"
 "
 " C-Space autocomplete
 inoremap <C-space> <C-x><C-o>
+
+" deoplete for golang
+let g:deoplete#enable_at_startup = 1
+call deoplete#custom#option('omni_patterns', {
+\ 'go': '[^. *\t]\.\w*',
+\})
 
 map <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
@@ -204,34 +209,24 @@ au FileType go nnoremap <Leader>c :GoCoverageToggle<CR>
 " Fugitigve stuff
 nnoremap <C-S> :Gtabedit :<CR>:set previewwindow<CR>
 
-let g:OmniSharp_server_stdio = 1
-let g:OmniSharp_prefer_global_sln = 1 
-let g:OmniSharp_server_type = 'roslyn' 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 'Smart' nevigation
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
 " Use <c-.> to trigger completion.
 inoremap <silent><expr> <c-.> coc#refresh()
 
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Use <c-space> to trigger completion
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
 else
-  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+  inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
 

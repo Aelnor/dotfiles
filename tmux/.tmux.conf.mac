@@ -2,8 +2,8 @@
 set-option -g history-limit 100000
 
 # modern colors
-set -ga terminal-overrides ",alacritty:Tc"
 set -g default-terminal "screen-256color"
+set -ga terminal-overrides ",alacritty:Tc"
 
 # Avoid ESC delay
 set -s escape-time 0
@@ -37,4 +37,11 @@ bind l select-pane -R
 set -g status-right ''
 set -g status-right-length 0
 
-source-file ~/Documents/dotfiles/tmux/base16-gruvbox-dark-hard.conf
+#source-file ~/Documents/dotfiles/tmux/base16-gruvbox-dark-hard.conf
+set -g @catppuccin_window_default_text "#W" # "#{b:pane_current_path}" # use "#W" for application instead of directory
+set -g @catppuccin_window_current_text "#W" # "#{b:pane_current_path}" # use "#W" for application instead of directory
+
+
+set -g @plugin 'catppuccin/tmux'
+set -g @plugin 'tmux-plugins/tpm'
+run '~/.tmux/plugins/tpm/tpm'
