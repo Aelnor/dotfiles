@@ -191,4 +191,8 @@ exec_always --no-startup-id nitrogen --restore
 exec compton
 exec nextcloud --background
 exec redshift-gtk
-for_window [class="mtga.exe"] floating enable
+for_window [class="mtga"] floating enable
+for_window [class="RimWorldLinux"] floating enable
+
+bindsym $mod+Shift+BackSpace move scratchpad
+bindsym $mod+backslash scratchpad show
