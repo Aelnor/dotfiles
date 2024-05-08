@@ -53,7 +53,7 @@ au FileType go setl tabstop=4 shiftwidth=4 noexpandtab autoindent
 au FileType c setl tabstop=8 shiftwidth=8 noexpandtab autoindent
 au FileType js setl tabstop=4 shiftwidth=4 expandtab autoindent
 
-au FileType markdown.pandoc setl wrap
+au FileType markdown.pandoc setl wrap linebreak
 au FileType markdown.pandoc setl spell spelllang=en_US
 
 "Copy paste to/from clipboard
@@ -69,8 +69,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'rust-lang/rust.vim'
-Plug 'majutsushi/tagbar'            " Class/module browser
+"Plug 'majutsushi/tagbar'            " Class/module browser
 Plug 'tpope/vim-surround'     " Parentheses, brackets, quotes, XML tags, and more
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
@@ -109,7 +108,7 @@ Plug 'Vimjas/vim-python-pep8-indent'
 " Plug 'python-mode/python-mode'
 "
 " Vue
-Plug 'posva/vim-vue'
+" Plug 'posva/vim-vue'
 
 " C++
 Plug 'octol/vim-cpp-enhanced-highlight'
@@ -121,6 +120,13 @@ Plug 'godlygeek/tabular'
 " JSON front matter highlight plugin
 Plug 'elzr/vim-json'
 Plug 'plasticboy/vim-markdown'
+<<<<<<< HEAD
+=======
+
+" Plug 'OmniSharp/omnisharp-vim'
+"
+" Distraction-free
+Plug 'junegunn/goyo.vim'
 call plug#end()
 
 packadd! dracula_pro
@@ -229,6 +235,7 @@ else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
+inoremap <silent><expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 
 " Markdown
 " disable header folding
