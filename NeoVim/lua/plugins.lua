@@ -107,7 +107,50 @@ require("lazy").setup({
 				},
 			}
 
-			lspconfig.gopls.setup{}
+			util = require "lspconfig/util"
+
+			local capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+			capabilities.textDocument.completion.completionItem.snippetSupport = true
+			lspconfig.gopls.setup({
+				capabilities = capabilities,
+				flags = { debounce_text_changes = 200 },
+				settings = {
+					gopls = {
+						usePlaceholders = true,
+						gofumpt = true,
+						analyses = {
+							nilness = true,
+							unusedparams = true,
+							unusedwrite = true,
+							useany = true,
+						},
+						codelenses = {
+							gc_details = false,
+							generate = true,
+							regenerate_cgo = true,
+							run_govulncheck = true,
+							test = true,
+							tidy = true,
+							upgrade_dependency = true,
+							vendor = true,
+						},
+						experimentalPostfixCompletions = true,
+						completeUnimported = true,
+						staticcheck = true,
+						directoryFilters = { "-.git", "-node_modules" },
+						semanticTokens = true,
+						hints = {
+							assignVariableTypes = true,
+							compositeLiteralFields = true,
+							compositeLiteralTypes = true,
+							constantValues = true,
+							functionTypeParameters = true,
+							parameterNames = true,
+							rangeVariableTypes = true,
+						},
+					},
+				},
+			})
 
 			-- Bash LSP
 			local configs = require 'lspconfig.configs'
@@ -271,8 +314,7 @@ require("lazy").setup({
 	-- markdown
 	{
 		'plasticboy/vim-markdown',
-		ft = { "markdown" },
-		dependencies = {
+		ft = { "markdown" },		dependencies = {
 			'godlygeek/tabular',
 		},
 		config = function()
@@ -287,7 +329,22 @@ require("lazy").setup({
 			vim.g.vim_markdown_auto_insert_bullets = 0
 		end
 	},
-	'fatih/vim-go',
+	{
+		"fatih/vim-go",
+		config = function ()
+			-- we disable most of these features because treesitter and nvim-lsp
+			-- take care of it
+			vim.g['go_gopls_enabled'] = 0
+			vim.g['go_code_completion_enabled'] = 0
+			vim.g['go_fmt_autosave'] = 0
+			vim.g['go_imports_autosave'] = 0
+			vim.g['go_mod_fmt_autosave'] = 0
+			vim.g['go_doc_keywordprg_enabled'] = 0
+			vim.g['go_def_mapping_enabled'] = 0
+			vim.g['go_textobj_enabled'] = 0
+			vim.g['go_list_type'] = 'quickfix'
+		end,
+	}
 })
 
 
