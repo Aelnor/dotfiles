@@ -28,21 +28,34 @@ set laststatus=2
 set rnu
 set mouse=a
 
-function! SwitchSourceHeader()
-  if (expand ("%:e") == "cpp")
-    find %:t:r.h
-  else
-    find %:t:r.cpp
-  endif
-endfunction
+let g:go_fmt_options = '-s'
+" disable all linters as that is taken care of by coc.nvim
+let g:go_diagnostics_enabled = 0
+let g:go_metalinter_enabled = []
 
-nmap <F4> :call SwitchSourceHeader()<CR>
-nmap <F8> :Rg <C-r><C-w><CR>
+" don't jump to errors after metalinter is invoked
+let g:go_jump_to_error = 0
 
+" automatically highlight variable your cursor is on
+let g:go_auto_sameids = 0
 
-au FileType go nmap <F5> <Plug>(go-run)
-au FileType go nmap <F7> <Plug>(go-build)
-au FileType go nmap <F9> :DlvToggleBreakpoint<CR>
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_generate_tags = 1
+
+au FileType go setl tabstop=4 shiftwidth=4 noexpandtab autoindent
+au FileType go set colorcolumn=140
+
+au FileType c setl tabstop=8 shiftwidth=8 noexpandtab autoindent
+au FileType js setl tabstop=4 shiftwidth=4 expandtab autoindent
+
+au FileType markdown.pandoc setl wrap
+au FileType markdown.pandoc setl spell spelllang=en_US
 
 set tabstop=2
 set shiftwidth=2
@@ -53,7 +66,7 @@ au FileType go setl tabstop=4 shiftwidth=4 noexpandtab autoindent
 au FileType c setl tabstop=8 shiftwidth=8 noexpandtab autoindent
 au FileType js setl tabstop=4 shiftwidth=4 expandtab autoindent
 
-au FileType markdown.pandoc setl wrap linebreak
+au FileType markdown.pandoc setl wrap
 au FileType markdown.pandoc setl spell spelllang=en_US
 
 "Copy paste to/from clipboard
@@ -69,7 +82,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-"Plug 'majutsushi/tagbar'            " Class/module browser
+Plug 'rust-lang/rust.vim'
 Plug 'tpope/vim-surround'     " Parentheses, brackets, quotes, XML tags, and more
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
@@ -97,7 +110,6 @@ Plug 'andymass/vim-matchup'
 " Syntactic language support
 Plug 'cespare/vim-toml'
 Plug 'stephpy/vim-yaml'
-Plug 'rust-lang/rust.vim'
 
 " --- Go ---
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -120,13 +132,12 @@ Plug 'godlygeek/tabular'
 " JSON front matter highlight plugin
 Plug 'elzr/vim-json'
 Plug 'plasticboy/vim-markdown'
-<<<<<<< HEAD
-=======
 
-" Plug 'OmniSharp/omnisharp-vim'
-"
 " Distraction-free
 Plug 'junegunn/goyo.vim'
+
+" CoPilot
+Plug 'github/copilot.vim'
 call plug#end()
 
 packadd! dracula_pro
@@ -187,11 +198,6 @@ let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 let g:NERDTreeGlyphReadOnly = ''
 
-" C++ Highlight
-let g:cpp_class_scope_highlight = 1
-let g:cpp_member_variable_highlight = 1
-let g:cpp_class_decl_highlight = 1
-
 " pymode
 let g:pymode_folding = 0
 let g:pymode_options_max_line_length = 120
@@ -206,6 +212,8 @@ nnoremap <Leader>o :Files<CR>
 nnoremap <Leader>b :Buffers<CR>
 nmap ga <Plug>(EasyAlign)
 xmap ga <Plug>(EasyAlign)
+
+nmap <F8> :Rg <C-r><C-w><CR>
 
 " golang stuff
 au FileType go nmap <F4> :GoAlternate<CR>
