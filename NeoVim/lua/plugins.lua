@@ -1,14 +1,14 @@
 -- plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- latest stable release
+		lazypath,
+	})
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -344,7 +344,41 @@ require("lazy").setup({
 			vim.g['go_textobj_enabled'] = 0
 			vim.g['go_list_type'] = 'quickfix'
 		end,
-	}
+	},
+	-- file explorer
+	{
+		"nvim-tree/nvim-tree.lua",
+		version = "*",
+		dependencies = { 'nvim-tree/nvim-web-devicons' },
+		config = function()
+			require("nvim-tree").setup({
+				sort_by = "case_sensitive",
+				filters = {
+					dotfiles = true,
+				},
+				on_attach = function(bufnr)
+					local api = require('nvim-tree.api')
+
+					local function opts(desc)
+						return {
+							desc = 'nvim-tree: ' .. desc,
+							buffer = bufnr,
+							noremap = true,
+							silent = true,
+							nowait = true,
+						}
+					end
+
+					api.config.mappings.default_on_attach(bufnr)
+
+					vim.keymap.set('n', 's', api.node.open.vertical, opts('Open: Vertical Split'))
+					vim.keymap.set('n', 'i', api.node.open.horizontal, opts('Open: Horizontal Split'))
+					vim.keymap.set('n', 'u', api.tree.change_root_to_parent, opts('Up'))
+				end
+			})
+		end,
+	},
+	"github/copilot.vim",
 })
 
 
@@ -356,12 +390,36 @@ require("catppuccin").setup({
 })
 
 require('nvim-treesitter.configs').setup {
-  highlight = {
-    enable = true,
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
+	ensure_installed = {
+		'bash',
+		'fish',
+		'go',
+		'gomod',
+		'json',
+		'lua',
+		'markdown',
+		'markdown_inline',
+		'mermaid',
+		'rust',
+		'vim',
+		'vimdoc',
+		'yaml',
+
+	},
+	highlight = {
+		enable = true,
+		-- Disable slow treesitter highlight for large files
+		disable = function(lang, buf)
+			local max_filesize = 100 * 1024 -- 100 KB
+			local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+			if ok and stats and stats.size > max_filesize then
+				return true
+			end
+		end,
+		-- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+		-- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+		-- Using this option may slow down your editor, and you may see some duplicate highlights.
+		-- Instead of true it can also be a list of languages
+		additional_vim_regex_highlighting = false,
+	},
 }
