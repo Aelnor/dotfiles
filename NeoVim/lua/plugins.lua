@@ -17,7 +17,7 @@ require("lazy").setup({
 		"catppuccin/nvim", 
 		name = "catppuccin", 
 		priority = 1000,
-		lazy = false,
+		lazy = true,
 	},
 	-- nice bar at the bottom
 	{
@@ -52,12 +52,12 @@ require("lazy").setup({
 			end
 			-- https://github.com/itchyny/lightline.vim/issues/657
 			vim.api.nvim_exec(
-				[[
-				function! g:LightlineFilename()
-					return v:lua.LightlineFilenameInLua()
-				endfunction
-				]],
-				true
+			[[
+			function! g:LightlineFilename()
+			return v:lua.LightlineFilenameInLua()
+			endfunction
+			]],
+			true
 			)
 		end
 	},
@@ -78,7 +78,7 @@ require("lazy").setup({
 			vim.g.matchup_matchparen_offscreen = { method = "popup" }
 		end
 	},
-		-- LSP
+	-- LSP
 	{
 		'neovim/nvim-lspconfig',
 		config = function()
@@ -190,6 +190,7 @@ require("lazy").setup({
 					-- Buffer local mappings.
 					-- See `:help vim.lsp.*` for documentation on any of the below functions
 					local opts = { buffer = ev.buf }
+					vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
 					vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
 					vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
 					vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
@@ -235,6 +236,8 @@ require("lazy").setup({
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-vsnip",
+			"hrsh7th/vim-vsnip",
 		},
 		config = function()
 			local cmp = require'cmp'
@@ -252,15 +255,17 @@ require("lazy").setup({
 					['<C-e>'] = cmp.mapping.abort(),
 					-- Accept currently selected item.
 					-- Set `select` to `false` to only confirm explicitly selected items.
-					['<CR>'] = cmp.mapping.confirm({ select = true }),
+					['<CR>'] = cmp.mapping.confirm({ select = false }),
+					['<Tab>'] = cmp.mapping.confirm({ select = true }),
 				}),
 				sources = cmp.config.sources({
 					{ name = 'nvim_lsp' },
+					{ name = "copilot", group_index = 2 },
 				}, {
 					{ name = 'path' },
 				}),
 				experimental = {
-					ghost_text = true,
+					ghost_text = false,
 				},
 			})
 
@@ -270,6 +275,7 @@ require("lazy").setup({
 					{ name = 'path' }
 				})
 			})
+
 		end
 	},
 	-- inline function signatures
@@ -378,8 +384,38 @@ require("lazy").setup({
 			})
 		end,
 	},
-	"github/copilot.vim",
+	{
+		"kdheepak/lazygit.nvim",
+		cmd = {
+			"LazyGit",
+			"LazyGitConfig",
+			"LazyGitCurrentFile",
+			"LazyGitFilter",
+			"LazyGitFilterCurrentFile",
+		},
+		-- optional for floating window border decoration
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
+		-- setting the keybinding for LazyGit with 'keys' is recommended in
+		-- order to load the plugin when the command is run for the first time
+		keys = {
+			{ "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
+		}
+	},
+	{
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+	},
+	{
+		"zbirenbaum/copilot-cmp",
+		config = function()
+			require("copilot_cmp").setup()
+		end,
+	},
 })
+
 
 
 require("catppuccin").setup({
@@ -423,3 +459,7 @@ require('nvim-treesitter.configs').setup {
 		additional_vim_regex_highlighting = false,
 	},
 }
+require("copilot").setup({
+	suggestion = { enabled = false },
+	panel = { enabled = false },
+})
