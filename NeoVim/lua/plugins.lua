@@ -53,23 +53,38 @@ require("lazy").setup({
 			-- https://github.com/itchyny/lightline.vim/issues/657
 			vim.api.nvim_exec(
 			[[
-			function! g:LightlineFilename()
-			return v:lua.LightlineFilenameInLua()
-			endfunction
+				function! g:LightlineFilename()
+					return v:lua.LightlineFilenameInLua()
+				endfunction
 			]],
 			true
 			)
 		end
 	},
+	
+	--{
+	--	'junegunn/fzf.vim',
+	--	dependencies = {
+	--		{ 'junegunn/fzf', dir = '~/.fzf', build = './install --all' },
+	--	},
+	--	config = function()
+	--		-- stop putting a giant window over my editor
+	--		vim.g.fzf_layout = { down = '~20%' }
+	--	end
+	--},
 	{
-		'junegunn/fzf.vim',
-		dependencies = {
-			{ 'junegunn/fzf', dir = '~/.fzf', build = './install --all' },
-		},
+		'nvim-telescope/telescope.nvim', tag = '0.1.8',
+		-- or                              , branch = '0.1.x',
+		dependencies = { 'nvim-lua/plenary.nvim' },
 		config = function()
-			-- stop putting a giant window over my editor
-			vim.g.fzf_layout = { down = '~20%' }
+			local builtin = require('telescope.builtin')
+			vim.keymap.set('n', '<leader>o', builtin.find_files, {})
+			vim.keymap.set('n', '<c-p>', builtin.find_files, {})
+			vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+			vim.keymap.set('n', '<leader>b', builtin.buffers, {})
+			vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 		end
+		
 	},
 	-- better %
 	{
@@ -209,7 +224,7 @@ require("lazy").setup({
 						vim.lsp.buf.format { async = true }
 					end, opts)
 
-					local client = vim.lsp.get_client_by_id(ev.data.client_id)
+					--local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
 					-- When https://neovim.io/doc/user/lsp.html#lsp-inlay_hint stabilizes
 					-- *and* there's some way to make it only apply to the current line.
@@ -414,6 +429,94 @@ require("lazy").setup({
 			require("copilot_cmp").setup()
 		end,
 	},
+	{
+		"AndrewRadev/splitjoin.vim",
+		lazy = false,
+	},
+	{
+		"epwalsh/obsidian.nvim",
+		version = "*",  -- recommended, use latest release instead of latest commit
+		lazy = true,
+		ft = "markdown",
+		-- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
+		-- event = {
+			--   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+			--   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
+			--   "BufReadPre path/to/my-vault/**.md",
+			--   "BufNewFile path/to/my-vault/**.md",
+			-- },
+		dependencies = {
+			-- Required.
+			"nvim-lua/plenary.nvim",
+		},	
+		opts = {
+			workspaces = {
+				{
+					name = "vault",
+					path = "~/Documents/Vault",
+				},
+			},
+			notes_subdir = "Inbox",
+			new_notes_location = "notes_subdir",
+			-- Optional, customize how note IDs are generated given an optional title.
+			---@param title string|?
+			---@return string
+			note_id_func = function(title)
+				-- Create note IDs in a Zettelkasten format with a timestamp and a suffix.
+				-- In this case a note with the title 'My new note' will be given an ID that looks
+				-- like '1657296016-my-new-note', and therefore the file name '1657296016-my-new-note.md'
+				local suffix = ""
+				if title ~= nil then
+					-- If title is given, transform it into valid file name.
+					suffix = title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
+				else
+					-- If title is nil, just add 4 random uppercase letters to the suffix.
+					for _ = 1, 4 do
+						suffix = suffix .. string.char(math.random(65, 90))
+					end
+				end
+				return tostring(os.time()) .. "-" .. suffix
+			end,
+
+			-- Optional, customize how note file names are generated given the ID, target directory, and title.
+			---@param spec { id: string, dir: obsidian.Path, title: string|? }
+			---@return string|obsidian.Path The full path to the new note.
+			note_path_func = function(spec)
+				-- This is equivalent to the default behavior.
+				local path = spec.dir / tostring(spec.id)
+				return path:with_suffix(".md")
+			end,
+
+			templates = {
+				folder = "Templates",
+				date_format = "%Y-%m-%d-%a",
+				time_format = "%H:%M",
+			},
+			daily_notes = {
+				-- Optional, if you keep daily notes in a separate directory.
+				folder = "Periodic",
+				-- Optional, if you want to change the date format for the ID of daily notes.
+				date_format = "%Y/%m/%d-%b-%Y",
+				-- Optional, if you want to change the date format of the default alias of daily notes.
+				alias_format = "%B %-d, %Y",
+				-- Optional, default tags to add to each new daily note created.
+				default_tags = { "daily-notes" },
+				-- Optional, if you want to automatically insert a template from your template directory like 'daily.md'
+				template = "Daily.md"
+			},
+			-- Optional, completion of wiki links, local markdown links, and tags using nvim-cmp.
+			completion = {
+				-- Set to false to disable completion.
+				nvim_cmp = true,
+				-- Trigger completion at 2 chars.
+				min_chars = 2,
+			}
+		},
+		keys = {
+			{ "<leader>nt", "<cmd>ObsidianToday<cr>", desc = "Open today daily note in Obsidian Vault" },
+			{ "<leader>nn", "<cmd>ObsidianNew<cr>", desc = "Create new note in Obsidian Vault" }
+		}
+	}
 })
 
 
