@@ -155,12 +155,12 @@ require("lazy").setup({
 						directoryFilters = { "-.git", "-node_modules" },
 						semanticTokens = true,
 						hints = {
-							assignVariableTypes = true,
+							assignVariableTypes = false,
 							compositeLiteralFields = true,
 							compositeLiteralTypes = true,
-							constantValues = true,
+							constantValues = false,
 							functionTypeParameters = true,
-							parameterNames = true,
+							parameterNames = false,
 							rangeVariableTypes = true,
 						},
 					},
@@ -224,13 +224,13 @@ require("lazy").setup({
 						vim.lsp.buf.format { async = true }
 					end, opts)
 
-					--local client = vim.lsp.get_client_by_id(ev.data.client_id)
+					local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
 					-- When https://neovim.io/doc/user/lsp.html#lsp-inlay_hint stabilizes
 					-- *and* there's some way to make it only apply to the current line.
-					-- if client.server_capabilities.inlayHintProvider then
-					--     vim.lsp.inlay_hint(ev.buf, true)
-					-- end
+					if client.server_capabilities.inlayHintProvider then
+					    vim.lsp.inlay_hint.enable(true)
+					end
 
 					-- None of this semantics tokens business.
 					-- https://www.reddit.com/r/neovim/comments/143efmd/is_it_possible_to_disable_treesitter_completely/
@@ -415,9 +415,34 @@ require("lazy").setup({
 		"AndrewRadev/splitjoin.vim",
 		lazy = false,
 	},
+	"rest-nvim/rest.nvim",
 	{
-		"rest-nvim/rest.nvim",
-	}
+		"epwalsh/obsidian.nvim",
+		version = "*",  -- recommended, use latest release instead of latest commit
+		lazy = true,
+		ft = "markdown",
+		dependencies = {
+			-- Required.
+			"nvim-lua/plenary.nvim",
+
+		},
+		opts = {
+			disable_frontmatter = true,
+			workspaces = {
+				{
+					name = "Acronis",
+					path = "~/Documents/AcronisV",
+				}
+			},
+			daily_notes = {
+				-- Optional, if you keep daily notes in a separate directory.
+				folder = "Periodic/Daily",
+				-- Optional, if you want to change the date format for the ID of daily notes.
+				date_format = "%Y/%m/%d-%b",
+			},
+
+		},
+	}	
 })
 
 
