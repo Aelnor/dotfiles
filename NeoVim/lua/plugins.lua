@@ -98,10 +98,9 @@ require("lazy").setup({
 		'neovim/nvim-lspconfig',
 		config = function()
 			-- Setup language servers.
-			local lspconfig = require('lspconfig')
 
 			-- Rust
-			lspconfig.rust_analyzer.setup {
+			vim.lsp.config('rust_analyzer', {
 				-- Server-specific settings. See `:help lspconfig-setup`
 				settings = {
 					["rust-analyzer"] = {
@@ -120,13 +119,14 @@ require("lazy").setup({
 						},
 					},
 				},
-			}
+			})
+			vim.lsp.enable('rust_analyzer')
 
 			util = require "lspconfig/util"
 
 			local capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 			capabilities.textDocument.completion.completionItem.snippetSupport = true
-			lspconfig.gopls.setup({
+			vim.lsp.config('gopls', {
 				capabilities = capabilities,
 				flags = { debounce_text_changes = 200 },
 				settings = {
@@ -166,25 +166,12 @@ require("lazy").setup({
 					},
 				},
 			})
+			vim.lsp.enable('gopls')
+
 
 			-- Bash LSP
-			local configs = require 'lspconfig.configs'
-			if not configs.bash_lsp and vim.fn.executable('bash-language-server') == 1 then
-				configs.bash_lsp = {
-					default_config = {
-						cmd = { 'bash-language-server', 'start' },
-						filetypes = { 'sh' },
-						root_dir = require('lspconfig').util.find_git_ancestor,
-						init_options = {
-							settings = {
-								args = {}
-							}
-						}
-					}
-				}
-			end
-			if configs.bash_lsp then
-				lspconfig.bash_lsp.setup {}
+			if vim.fn.executable('bash-language-server') == 1 then
+				vim.lsp.enable('bashls')
 			end
 
 			-- Global mappings.
@@ -280,7 +267,7 @@ require("lazy").setup({
 					{ name = 'path' },
 				}),
 				experimental = {
-					ghost_text = false,
+					ghost_text = true,
 				},
 			})
 
