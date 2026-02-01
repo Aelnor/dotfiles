@@ -87,5 +87,5 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 require('hotkeys')
 require('plugins')
 
-vim.cmd.colorscheme "catppuccin"
+vim.cmd.colorscheme "dracula_pro"
 
