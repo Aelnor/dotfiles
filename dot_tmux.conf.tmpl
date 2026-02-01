@@ -2,7 +2,11 @@
 set-option -g history-limit 100000
 
 # modern colors
+{{- if eq .chezmoi.os "darwin" }}
 set -g default-terminal "screen-256color"
+{{- else }}
+set -g default-terminal "tmux-256color"
+{{- end }}
 set -ga terminal-overrides ",alacritty:Tc"
 
 # Avoid ESC delay
@@ -14,11 +18,24 @@ set -g set-titles-string "#T"
 
 # VIM mode
 set -g mode-keys vi
+{{- if eq .chezmoi.os "darwin" }}
 set -g status-keys vi
-bind -T copy-mode-vi v send-keys -X begin-selection
+{{- end }}
+
+# copy mode bindings
+bind -T copy-mode-vi v send -X begin-selection
+{{- if eq .chezmoi.os "darwin" }}
 bind -T copy-mode-vi y send -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
 unbind -T copy-mode-vi Enter
 bind -T copy-mode-vi Enter send -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
+{{- else }}
+bind -T copy-mode-vi y send-keys -X copy-pipe 'xclip -in -selection clipboard &> /dev/null'
+bind -T copy-mode-vi Enter send-keys -X cancel
+
+# shortcut for moving tmux buffer to clipboard
+# useful if you've selected with the mouse
+bind-key -nr C-y run "tmux show-buffer | xclip -in -selection clipboard &> /dev/null"
+{{- end }}
 
 # Mouse friendly
 set -g mouse on
@@ -29,9 +46,11 @@ bind j select-pane -D
 bind k select-pane -U
 bind l select-pane -R
 
+{{- if eq .chezmoi.os "darwin" }}
 # start indexing with 1
 set -g base-index 1
 set -g pane-base-index 1
+{{- end }}
 
 ######################
 ### DESIGN CHANGES ###
@@ -41,6 +60,7 @@ set -g pane-base-index 1
 set -g status-right ''
 set -g status-right-length 0
 
+{{- if eq .chezmoi.os "darwin" }}
 set -g @catppuccin_flavor "mocha"
 set -g @catppuccin_window_status_style "rounded"
 
@@ -50,8 +70,9 @@ set -g status-left ""
 set -g status-right "#{E:@catppuccin_status_application}"
 set -ag status-right "#{E:@catppuccin_status_session}"
 
-# source-file ~/Documents/dotfiles/tmux/base16-gruvbox-dark-hard.conf
-set -g @plugin 'catppuccin/tmux#v2.1.2' # See https://github.com/catppuccin/tmux/tags for additional tags
-# ...alongside
+set -g @plugin 'catppuccin/tmux#v2.1.2'
 set -g @plugin 'tmux-plugins/tpm'
 run '~/.tmux/plugins/tpm/tpm'
+{{- else }}
+source-file ~/.config/tmux/base16-gruvbox-dark-hard.conf
+{{- end }}

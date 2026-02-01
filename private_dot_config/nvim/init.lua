@@ -88,4 +88,3 @@ require('hotkeys')
 require('plugins')
 
 vim.cmd.colorscheme "dracula_pro"
-

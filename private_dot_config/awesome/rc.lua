@@ -323,7 +323,7 @@ globalkeys = gears.table.join(
     awful.key({ modkey }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"}),
     -- Xrandr
-    awful.key({ modkey, "Control" }, "x", function() xrandr.xrandr() end, 
+    awful.key({ modkey, "Control" }, "x", function() xrandr.xrandr() end,
               {description = "xrandr menu", group = "layout"}),
     -- print screen
    awful.key({}, "Print",
@@ -502,13 +502,13 @@ awful.rules.rules = {
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },
-    { rule = { class = "mtga.exe" }, 
+    { rule = { class = "mtga.exe" },
          properties = { screen = 1, tag = "4", floating = true } },
     { rule = { name = "Zoom Meeting" },
          properties = { tag = "5"} },
-    { rule = { class = "zoom" }, 
+    { rule = { class = "zoom" },
          properties = { screen = 1, tag = "1", floating = true } },
-    { rule = { class = "eocapp.exe" }, 
+    { rule = { class = "eocapp.exe" },
          properties = { screen = 1, tag = "4", floating = true } },
 }
 -- }}}

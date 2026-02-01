@@ -13,9 +13,9 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	{ 
-		"catppuccin/nvim", 
-		name = "catppuccin", 
+	{
+		"catppuccin/nvim",
+		name = "catppuccin",
 		priority = 1000,
 		lazy = true,
 	},
@@ -61,7 +61,7 @@ require("lazy").setup({
 			)
 		end
 	},
-	
+
 	--{
 	--	'junegunn/fzf.vim',
 	--	dependencies = {
@@ -84,7 +84,7 @@ require("lazy").setup({
 			vim.keymap.set('n', '<leader>b', builtin.buffers, {})
 			vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 		end
-		
+
 	},
 	-- better %
 	{
