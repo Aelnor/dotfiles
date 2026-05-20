@@ -13,55 +13,63 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 	{
-		"catppuccin/nvim",
-		name = "catppuccin",
-		priority = 1000,
-		lazy = true,
+		"nvim-treesitter/nvim-treesitter",
+		branch = "master",
+		build = ":TSUpdate",
+		config = function()
+			require("nvim-treesitter.configs").setup({
+				ensure_installed = {
+					"bash",
+					"fish",
+					"go",
+					"gomod",
+					"json",
+					"lua",
+					"markdown",
+					"markdown_inline",
+					"mermaid",
+					"rust",
+					"vim",
+					"vimdoc",
+					"yaml",
+				},
+				highlight = { enable = false },
+			})
+		end,
 	},
 	-- nice bar at the bottom
 	{
-		'itchyny/lightline.vim',
-		lazy = false, -- also load at start since it's UI
+		'nvim-lualine/lualine.nvim',
+		lazy = false,
+		dependencies = { 'catppuccin' },
 		config = function()
-			-- no need to also show mode in cmd line when we have bar
 			vim.o.showmode = false
-			vim.g.lightline = {
-				colorscheme = 'darcula',
-				active = {
-					left = {
-						{ 'mode', 'paste' },
-						{ 'readonly', 'filename', 'modified' }
-					},
-					right = {
-						{ 'lineinfo' },
-						{ 'percent' },
-						{ 'fileencoding', 'filetype' }
-					},
+			require('lualine').setup({
+				options = {
+					theme = 'catppuccin-nvim',
+					icons_enabled = false,
+					component_separators = '',
+					section_separators = '',
+					globalstatus = true,
 				},
-				component_function = {
-					filename = 'LightlineFilename'
+				sections = {
+					lualine_a = { 'mode' },
+					lualine_b = {
+						'readonly',
+						{ 'filename', path = 1 },
+						'modified',
+					},
+					lualine_c = {},
+					lualine_x = { 'encoding', 'filetype' },
+					lualine_y = { 'progress' },
+					lualine_z = { 'location' },
 				},
-			}
-			function LightlineFilenameInLua(opts)
-				if vim.fn.expand('%:t') == '' then
-					return '[No Name]'
-				else
-					return vim.fn.getreg('%')
-				end
-			end
-			-- https://github.com/itchyny/lightline.vim/issues/657
-			vim.api.nvim_exec(
-			[[
-				function! g:LightlineFilename()
-					return v:lua.LightlineFilenameInLua()
-				endfunction
-			]],
-			true
-			)
-		end
+			})
+		end,
 	},
-
+	
 	--{
 	--	'junegunn/fzf.vim',
 	--	dependencies = {
@@ -84,7 +92,7 @@ require("lazy").setup({
 			vim.keymap.set('n', '<leader>b', builtin.buffers, {})
 			vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 		end
-
+		
 	},
 	-- better %
 	{
@@ -189,24 +197,16 @@ require("lazy").setup({
 					-- Enable completion triggered by <c-x><c-o>
 					vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-					-- Buffer local mappings.
-					-- See `:help vim.lsp.*` for documentation on any of the below functions
+					-- Buffer-local mappings. Built-in defaults (grr, grn, gri, gra, grt, gO,
+					-- <C-S>) and K (auto-wired to hover) cover the rest. See :h lsp-defaults.
 					local opts = { buffer = ev.buf }
-					vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
 					vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
 					vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-					vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-					vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-					vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
 					vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
 					vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
 					vim.keymap.set('n', '<leader>wl', function()
 						print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 					end, opts)
-					--vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
-					vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, opts)
-					vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, opts)
-					vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
 					vim.keymap.set('n', '<leader>f', function()
 						vim.lsp.buf.format { async = true }
 					end, opts)
@@ -262,7 +262,6 @@ require("lazy").setup({
 				}),
 				sources = cmp.config.sources({
 					{ name = 'nvim_lsp' },
-					{ name = "copilot", group_index = 2 },
 				}, {
 					{ name = 'path' },
 				}),
@@ -388,47 +387,8 @@ require("lazy").setup({
 	},
 	"tpope/vim-fugitive",
 	{
-		"zbirenbaum/copilot.lua",
-		cmd = "Copilot",
-		event = "InsertEnter",
-	},
-	{
-		"zbirenbaum/copilot-cmp",
-		config = function()
-			require("copilot_cmp").setup()
-		end,
-	},
-	{
 		"AndrewRadev/splitjoin.vim",
 		lazy = false,
-	},
-	"rest-nvim/rest.nvim",
-	{
-		"epwalsh/obsidian.nvim",
-		version = "*",  -- recommended, use latest release instead of latest commit
-		lazy = true,
-		ft = "markdown",
-		dependencies = {
-			-- Required.
-			"nvim-lua/plenary.nvim",
-
-		},
-		opts = {
-			disable_frontmatter = true,
-			workspaces = {
-				{
-					name = "Acronis",
-					path = "~/Documents/AcronisV",
-				}
-			},
-			daily_notes = {
-				-- Optional, if you keep daily notes in a separate directory.
-				folder = "Periodic/Daily",
-				-- Optional, if you want to change the date format for the ID of daily notes.
-				date_format = "%Y/%m/%d-%b",
-			},
-
-		},
 	},
 	{
 		'MeanderingProgrammer/render-markdown.nvim',
@@ -465,50 +425,31 @@ require("lazy").setup({
 	}
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = {
+    "bash",
+    "fish",
+    "go",
+    "gomod",
+    "json",
+    "lua",
+    "markdown",
+    "mermaid",
+    "rust",
+    "vim",
+    "help", -- vimdoc
+    "yaml",
+  },
+  callback = function(args)
+    local max_filesize = 100 * 1024
+    local name = vim.api.nvim_buf_get_name(args.buf)
+    local ok, stats = pcall(vim.uv.fs_stat, name)
 
+    if ok and stats and stats.size > max_filesize then
+      return
+    end
 
-require("catppuccin").setup({
-	flavour = "mocha",
-	styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
-		comments = { "italic" } -- Change the style of comment
-	},
+    pcall(vim.treesitter.start, args.buf)
+  end,
 })
-
-require('nvim-treesitter.configs').setup {
-	ensure_installed = {
-		'bash',
-		'fish',
-		'go',
-		'gomod',
-		'json',
-		'lua',
-		'markdown',
-		'markdown_inline',
-		'mermaid',
-		'rust',
-		'vim',
-		'vimdoc',
-		'yaml',
-
-	},
-	highlight = {
-		enable = true,
-		-- Disable slow treesitter highlight for large files
-		disable = function(lang, buf)
-			local max_filesize = 100 * 1024 -- 100 KB
-			local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-			if ok and stats and stats.size > max_filesize then
-				return true
-			end
-		end,
-		-- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-		-- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-		-- Using this option may slow down your editor, and you may see some duplicate highlights.
-		-- Instead of true it can also be a list of languages
-		additional_vim_regex_highlighting = false,
-	},
-}
-require("copilot").setup({
-	suggestion = { enabled = true },
-	panel = { enabled = true },
-})
+vim.lsp.enable('marksman')

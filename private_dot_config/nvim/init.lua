@@ -87,4 +87,6 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 require('hotkeys')
 require('plugins')
 
-vim.cmd.colorscheme "dracula_pro"
+vim.opt.termguicolors = true
+vim.o.background = "dark" -- or "light" for light mode
+vim.cmd([[colorscheme catppuccin]])
