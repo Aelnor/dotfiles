@@ -62,7 +62,6 @@ set -g focus-events on
 set -g status-right ''
 set -g status-right-length 0
 
-{{- if eq .chezmoi.os "darwin" }}
 set -g @catppuccin_flavor "mocha"
 set -g @catppuccin_window_status_style "rounded"
 
@@ -83,6 +82,3 @@ set -agF status-right "#{E:@catppuccin_status_cpu}"
 set -agF status-right "#{E:@catppuccin_status_session}"
 
 run '~/.tmux/plugins/tpm/tpm'
-{{- else }}
-source-file ~/.config/tmux/base16-gruvbox-dark-hard.conf
-{{- end }}
